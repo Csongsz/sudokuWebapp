@@ -1,10 +1,15 @@
 const sudokuGrid = document.querySelector('.sudoku-grid');
 const newGameBtn = document.getElementById('new-game-btn');
+const checkBtn = document.getElementById('check-btn');
+
+// Get modal elements
+const feedbackModal = document.getElementById('feedbackModal');
+const modalMessage = document.getElementById('modal-message');
+const closeButton = document.querySelector('.close-button');
 
 let board = [];
-let solution = []; // A teljes megoldás tárolására
+let solution = [];
 
-// Egy előre definiált, érvényes Sudoku tábla (példa)
 const solvedBoard = [
     [5, 3, 4, 6, 7, 8, 9, 1, 2],
     [6, 7, 2, 1, 9, 5, 3, 4, 8],
@@ -27,6 +32,9 @@ function createGrid(initialBoard) {
         for (let j = 0; j < 9; j++) {
             const cellDiv = document.createElement('div');
             cellDiv.classList.add('cell');
+            cellDiv.dataset.row = i;
+            cellDiv.dataset.col = j;
+
             const input = document.createElement('input');
             input.type = 'text';
             input.maxLength = '1';
@@ -35,7 +43,7 @@ function createGrid(initialBoard) {
             if (initialBoard[i][j] !== '') {
                 input.value = initialBoard[i][j];
                 input.classList.add('fixed');
-                input.readOnly = true; // A kezdeti számokat ne lehessen módosítani
+                input.readOnly = true;
             }
 
             cellDiv.appendChild(input);
@@ -48,20 +56,25 @@ function handleInput(event) {
     const input = event.target;
     const value = input.value;
     if (value === '' || (value >= '1' && value <= '9')) {
-        // Itt lehetne ellenőrizni a szabályokat valós időben
-        const rowIndex = Math.floor(Array.from(sudokuGrid.children).indexOf(input.parentNode) / 9);
-        const colIndex = Array.from(input.parentNode.children).indexOf(input);
-        board[rowIndex][colIndex] = value;
+        // Remove any incorrect class when input changes
+        input.parentNode.classList.remove('incorrect');
+
+        const cellDiv = input.parentNode;
+        const rowIndex = parseInt(cellDiv.dataset.row);
+        const colIndex = parseInt(cellDiv.dataset.col);
+
+        board[rowIndex][colIndex] = value === '' ? '' : parseInt(value);
     } else {
-        input.value = ''; // Érvénytelen karakter esetén töröljük
+        input.value = '';
     }
 }
 
-function generatePuzzle(solvedBoard, difficulty = 0.5) {
-    const puzzle = solvedBoard.map(row => [...row]); // A megoldás másolata
-    const cellsToRemove = Math.floor(81 * difficulty);
+function generatePuzzle(solvedBoard) {
+    const puzzle = solvedBoard.map(row => [...row]);
+    const cellsToRemove = Math.floor(81 * 0.5);
     let removedCount = 0;
 
+    // Simple removal, doesn't guarantee unique solution or specific difficulty
     while (removedCount < cellsToRemove) {
         const row = Math.floor(Math.random() * 9);
         const col = Math.floor(Math.random() * 9);
@@ -74,14 +87,69 @@ function generatePuzzle(solvedBoard, difficulty = 0.5) {
     return puzzle;
 }
 
+function checkSolution() {
+    let correct = true;
+    const cells = sudokuGrid.querySelectorAll('.cell');
+
+    cells.forEach(cell => {
+        const input = cell.querySelector('input');
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
+        const value = input.value === '' ? '' : parseInt(input.value);
+
+        // Remove previous incorrect highlighting
+        cell.classList.remove('incorrect');
+
+        // Only check non-fixed cells and if they have a value
+        if (!input.readOnly && value !== '' && value !== solution[row][col]) {
+            cell.classList.add('incorrect');
+            correct = false;
+        }
+        // Also check if a non-fixed cell is empty but should have a value
+        if (!input.readOnly && value === '' && solution[row][col] !== '') {
+            // Optionally highlight missing required values differently or just count them as incorrect
+            correct = false; // Treat missing required as incorrect
+        }
+    });
+
+    if (correct) {
+        showModal('Gratulálunk! A megoldás helyes!');
+    } else {
+        showModal('Vannak hibák a megoldásban.');
+    }
+}
+
+// Function to display the modal
+function showModal(message) {
+    modalMessage.textContent = message;
+    feedbackModal.style.display = 'flex'; // Use flex to center
+}
+
+// Function to hide the modal
+function hideModal() {
+    feedbackModal.style.display = 'none';
+}
+
 function startNewGame() {
-    solution = solvedBoard.map(row => [...row]); // A megoldás tárolása
-    const puzzle = generatePuzzle(solution, 0.6); // Nehézségi szint állítható (0-1 közötti érték)
-    board = puzzle.map(row => [...row]); // A játék táblájának beállítása a feladvánnyal
+    solution = solvedBoard.map(row => [...row]);
+    const puzzle = generatePuzzle(solution, 0.6);
+    board = puzzle.map(row => [...row]);
     createGrid(puzzle);
+    hideModal(); // Hide modal on new game
 }
 
 newGameBtn.addEventListener('click', startNewGame);
+checkBtn.addEventListener('click', checkSolution);
 
-// Indításkor létrehozzuk az első játékot
+// Event listeners to close the modal
+closeButton.addEventListener('click', hideModal);
+
+// Close the modal if the user clicks outside of the modal content
+window.addEventListener('click', (event) => {
+    if (event.target === feedbackModal) {
+        hideModal();
+    }
+});
+
+
 startNewGame();

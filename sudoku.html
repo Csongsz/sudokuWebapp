@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudoku</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Sudoku</h1>
-    <div class="sudoku-grid">
+    <h1>Sudoku</h1>
+    <div class="sudoku-grid">
+        </div>
+    <button id="new-game-btn">Új Játék</button>
+    <button id="check-btn">Ellenőrzés</button>
+
+    <div id="feedbackModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <p id="modal-message"></p>
         </div>
-    <button id="new-game-btn">Új Játék</button>
-    <script src="script.js"></script>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
