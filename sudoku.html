@@ -1,25 +1,41 @@
 <!DOCTYPE html>
 <html lang="hu">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudoku</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Élmény</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+
 <body>
-    <h1>Sudoku</h1>
-    <div class="sudoku-grid">
-        </div>
-    <button id="new-game-btn">Új Játék</button>
-    <button id="check-btn">Ellenőrzés</button>
+    <header>
+        <h1>Sudoku</h1>
+        <p>Próbáld ki magad a klasszikus logikai játékban!</p>
+        <a href="about.html" class="about-link" aria-label="Rólunk oldal"><i class="fas fa-question-circle"></i></a>
+    </header>
 
-    <div id="feedbackModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <p id="modal-message"></p>
+    <main class="container">
+        <div class="sudoku-grid" role="grid" aria-label="Sudoku tábla">
         </div>
-    </div>
+        <div class="controls">
+            <button id="new-game-btn" aria-label="Új játék indítása">Új Játék</button>
+            <button id="check-btn" aria-label="A megoldás ellenőrzése">Ellenőrzés</button>
+        </div>
 
-    <script src="script.js"></script>
+        <div id="feedbackModal" class="modal" aria-modal="true" role="dialog" aria-labelledby="modal-message">
+            <div class="modal-content">
+                <button class="close-button" aria-label="A visszajelzés ablak bezárása">&times;</button>
+                <p id="modal-message" role="alert"></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
 </body>
+
 </html>

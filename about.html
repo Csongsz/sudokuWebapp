@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Élmény</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <header>
+        <h1>Sudoku</h1>
+        <p>Próbáld ki magad a klasszikus logikai játékban!</p>
+        <a href="sudoku.html" class="about-link" aria-label="Vissza a főoldalra"><i class="fas fa-arrow-left"></i></a>
+    </header>
+
+    <main class="container">
+        <section>
+            <h2>A Sudoku Története</h2>
+            <p>A Sudoku egy logikai alapú számkirakó játék. Bár a modern formája Japánban vált népszerűvé a 20. század végén, a játék gyökerei valójában egy régebbi, "szám négyzet" nevű rejtvényre vezethetők vissza, amelyet a 18. századi svájci matematikus, Leonhard Euler alkotott meg. Euler "Latin négyzetekkel" kísérletezett, ahol minden sorban és oszlopban egyszer szerepeltek a szimbólumok.</p>
+            <p>A mai Sudoku közvetlen elődje az "Number Place" nevű rejtvény volt, amelyet az amerikai Howard Garns tervezett, és 1979-ben publikálták egy rejtvényújságban. Ez a változat már tartalmazta a 9x9-es rácsot és a 3x3-as al-rácsokat.</p>
+            <p>Azonban a "Sudoku" név és a nemzetközi népszerűség Japánból indult. A Nikoli nevű japán rejtvénykiadó tette igazán híressé a játékot a 80-as években, és ők adták neki a "Sudoku" nevet, ami nagyjából "egyetlen számot" jelent.</p>
+            <p>A 2000-es évek elején a Sudoku globális jelenséggé vált, köszönhetően részben a nyugati újságokban való megjelenésének és az online platformoknak.</p>
+        </section>
+
+        <section>
+            <h2>A Sudoku Szabályai</h2>
+            <p>A Sudoku célja egy 9x9-es rács kitöltése számokkal (1-től 9-ig) úgy, hogy:</p>
+            <ul>
+                <li>Minden sorban az 1-től 9-ig terjedő számok pontosan egyszer szerepeljenek.</li>
+                <li>Minden oszlopban az 1-től 9-ig terjedő számok pontosan egyszer szerepeljenek.</li>
+                <li>Minden 3x3-as al-rácsban (amelyekre a 9x9-es rács fel van osztva) az 1-től 9-ig terjedő számok pontosan egyszer szerepeljenek.</li>
+            </ul>
+            <p>A játék elején a rács néhány cellája már ki van töltve számokkal. Ezek a kiinduló számok adják a rejtvény egyedi megoldását.</p>
+        </section>
+
+        <section>
+            <h2>Tippek és Stratégiák a Sudoku Megoldásához</h2>
+            <p>Íme néhány alapvető és haladóbb tipp a Sudoku rejtvények megoldásához:</p>
+            <h3>Alapvető Tippek:</h3>
+            <ul>
+                <li><strong>Keresd az egyértelmű lehetőségeket:</strong> Nézz át sorokat, oszlopokat és 3x3-as blokkokat, és ellenőrizd, hogy egy adott szám (1-től 9-ig) hányszor szerepel már. Ha egy szám egy sorban/oszlopban/blokkban már 8 helyen szerepel, akkor a kilencedik helyre egyértelműen az a szám kerül.</li>
+                <li><strong>Jelöld be a lehetséges számokat:</strong> Ha nem egyértelmű a megoldás, halványan írd be egy cellába azokat a számokat, amelyek oda elvileg kerülhetnek (figyelembe véve a sor, oszlop és blokk korlátozásait). Ez segít vizualizálni a lehetőségeket.</li>
+                <li><strong>Vizsgáld a sorokat és oszlopokat blokkonként:</strong> Ha egy szám egy 3x3-as blokkban csak két cellában lehetséges, és ez a két cella ugyanabban a sorban vagy oszlopban van, akkor ez a szám abban a sorban vagy oszlopban a blokkon kívül más cellában nem szerepelhet.</li>
+            </ul>
+            <h3>Haladóbb Stratégiák:</h3>
+            <ul>
+                <li><strong>Rejtett párok/triók:</strong> Egy sorban, oszlopban vagy blokkban, ha két vagy három cellában pontosan ugyanaz a két vagy három szám lehetséges (és más szám nem), akkor ezek a számok ebben a két vagy három cellában biztosan szerepelnek, és más lehetséges számok kizárhatók ezekből a cellákból.</li>
+                <li><strong>Mutató párok/triók (Pointing Pairs/Triples):</strong> Ha egy 3x3-as blokkban egy adott szám csak egy sorban vagy oszlopban található meg a lehetséges jelölések között, akkor ez a szám abban a sorban vagy oszlopban a blokkon kívül más cellában nem szerepelhet.</li>
+                <li><strong>X-szárny (X-Wing):</strong> Két sorban (vagy oszlopban) keresünk két olyan cellát, ahol ugyanaz a két szám lehetséges. Ha ezek a cellák úgy helyezkednek el, hogy a másik két végpontjuk ugyanabban a két oszlopban (vagy sorban) van, akkor ez a két szám kizárható a metszéspontokban lévő más cellákból.</li>
+                <li><strong>Kardhal (Swordfish), Medúza (Jellyfish) stb.:</strong> Hasonló logikán alapuló, de bonyolultabb minták, amelyek három vagy több sorra/oszlopra terjednek ki.</li>
+            </ul>
+            <p>A gyakorlás teszi a mestert! Minél többet játszol Sudokut, annál jobban fogod felismerni a különböző mintákat és stratégiákat.</p>
+        </section>
+    </main>
+</body>
+
+</html>

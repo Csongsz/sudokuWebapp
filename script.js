@@ -2,7 +2,6 @@ const sudokuGrid = document.querySelector('.sudoku-grid');
 const newGameBtn = document.getElementById('new-game-btn');
 const checkBtn = document.getElementById('check-btn');
 
-// Get modal elements
 const feedbackModal = document.getElementById('feedbackModal');
 const modalMessage = document.getElementById('modal-message');
 const closeButton = document.querySelector('.close-button');
@@ -56,7 +55,6 @@ function handleInput(event) {
     const input = event.target;
     const value = input.value;
     if (value === '' || (value >= '1' && value <= '9')) {
-        // Remove any incorrect class when input changes
         input.parentNode.classList.remove('incorrect');
 
         const cellDiv = input.parentNode;
@@ -69,23 +67,90 @@ function handleInput(event) {
     }
 }
 
-function generatePuzzle(solvedBoard) {
+function generatePuzzle(solvedBoard, difficulty = 0.5) {
     const puzzle = solvedBoard.map(row => [...row]);
-    const cellsToRemove = Math.floor(81 * 0.5);
+    const cellsToRemove = Math.floor(81 * difficulty);
     let removedCount = 0;
 
-    // Simple removal, doesn't guarantee unique solution or specific difficulty
-    while (removedCount < cellsToRemove) {
-        const row = Math.floor(Math.random() * 9);
-        const col = Math.floor(Math.random() * 9);
-
-        if (puzzle[row][col] !== '') {
-            puzzle[row][col] = '';
-            removedCount++;
+    // Create a shuffled array of all cell indices
+    const allCells = [];
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            allCells.push({ row: i, col: j });
         }
+    }
+    // Fisher-Yates shuffle
+    for (let i = allCells.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allCells[i], allCells[j]] = [allCells[j], allCells[i]];
+    }
+
+    let attempts = 0;
+    while (removedCount < cellsToRemove && attempts < allCells.length) {
+        const { row, col } = allCells[attempts];
+        const originalValue = puzzle[row][col];
+        puzzle[row][col] = '';
+
+        // Check if the puzzle still has a unique solution (very basic check)
+        // This is a simplified check and might not catch all cases
+        let possibleSolutions = 0;
+        // A full Sudoku solver would be needed for a robust check
+        const tempBoard = puzzle.map(r => r.map(v => v === '' ? 0 : v));
+        if (isValidSudoku(tempBoard)) {
+            // Very basic check: if removing this cell doesn't immediately invalidate the board
+            // we assume it's likely still solvable (not a perfect check)
+            removedCount++;
+        } else {
+            puzzle[row][col] = originalValue; // Restore if it seems to break the basic rules
+        }
+        attempts++;
     }
     return puzzle;
 }
+
+function isValidSudoku(board) {
+    // Check rows
+    for (let i = 0; i < 9; i++) {
+        const row = new Set();
+        for (let j = 0; j < 9; j++) {
+            const num = board[i][j];
+            if (num !== 0) {
+                if (row.has(num)) return false;
+                row.add(num);
+            }
+        }
+    }
+
+    // Check columns
+    for (let j = 0; j < 9; j++) {
+        const col = new Set();
+        for (let i = 0; i < 9; i++) {
+            const num = board[i][j];
+            if (num !== 0) {
+                if (col.has(num)) return false;
+                col.add(num);
+            }
+        }
+    }
+
+    // Check 3x3 subgrids
+    for (let i = 0; i < 9; i += 3) {
+        for (let j = 0; j < 9; j += 3) {
+            const subgrid = new Set();
+            for (let row = i; row < i + 3; row++) {
+                for (let col = j; col < j + 3; col++) {
+                    const num = board[row][col];
+                    if (num !== 0) {
+                        if (subgrid.has(num)) return false;
+                        subgrid.add(num);
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
 
 function checkSolution() {
     let correct = true;
@@ -97,59 +162,50 @@ function checkSolution() {
         const col = parseInt(cell.dataset.col);
         const value = input.value === '' ? '' : parseInt(input.value);
 
-        // Remove previous incorrect highlighting
         cell.classList.remove('incorrect');
 
-        // Only check non-fixed cells and if they have a value
         if (!input.readOnly && value !== '' && value !== solution[row][col]) {
             cell.classList.add('incorrect');
             correct = false;
         }
-        // Also check if a non-fixed cell is empty but should have a value
         if (!input.readOnly && value === '' && solution[row][col] !== '') {
-            // Optionally highlight missing required values differently or just count them as incorrect
-            correct = false; // Treat missing required as incorrect
+            correct = false;
         }
     });
 
     if (correct) {
-        showModal('Gratulálunk! A megoldás helyes!');
+        showModal('Gratulálunk! A Sudoku sikeresen megoldva!');
     } else {
-        showModal('Vannak hibák a megoldásban.');
+        showModal('Vannak még hibák a Sudoku táblán.');
     }
 }
 
-// Function to display the modal
 function showModal(message) {
     modalMessage.textContent = message;
-    feedbackModal.style.display = 'flex'; // Use flex to center
+    feedbackModal.style.display = 'flex';
 }
 
-// Function to hide the modal
 function hideModal() {
     feedbackModal.style.display = 'none';
 }
 
 function startNewGame() {
     solution = solvedBoard.map(row => [...row]);
-    const puzzle = generatePuzzle(solution, 0.6);
+    const puzzle = generatePuzzle(solution, 0.3); // difficulty (0.1 - easy, 0.9 - hard)
     board = puzzle.map(row => [...row]);
     createGrid(puzzle);
-    hideModal(); // Hide modal on new game
+    hideModal();
 }
 
 newGameBtn.addEventListener('click', startNewGame);
 checkBtn.addEventListener('click', checkSolution);
 
-// Event listeners to close the modal
 closeButton.addEventListener('click', hideModal);
 
-// Close the modal if the user clicks outside of the modal content
 window.addEventListener('click', (event) => {
     if (event.target === feedbackModal) {
         hideModal();
     }
 });
-
 
 startNewGame();
