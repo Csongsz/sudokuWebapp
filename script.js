@@ -67,19 +67,17 @@ function handleInput(event) {
     }
 }
 
-function generatePuzzle(solvedBoard, difficulty = 0.5) {
+function generatePuzzle(solvedBoard, difficulty = 0.3) {
     const puzzle = solvedBoard.map(row => [...row]);
     const cellsToRemove = Math.floor(81 * difficulty);
     let removedCount = 0;
 
-    // Create a shuffled array of all cell indices
     const allCells = [];
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
             allCells.push({ row: i, col: j });
         }
     }
-    // Fisher-Yates shuffle
     for (let i = allCells.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [allCells[i], allCells[j]] = [allCells[j], allCells[i]];
@@ -91,17 +89,12 @@ function generatePuzzle(solvedBoard, difficulty = 0.5) {
         const originalValue = puzzle[row][col];
         puzzle[row][col] = '';
 
-        // Check if the puzzle still has a unique solution (very basic check)
-        // This is a simplified check and might not catch all cases
         let possibleSolutions = 0;
-        // A full Sudoku solver would be needed for a robust check
         const tempBoard = puzzle.map(r => r.map(v => v === '' ? 0 : v));
         if (isValidSudoku(tempBoard)) {
-            // Very basic check: if removing this cell doesn't immediately invalidate the board
-            // we assume it's likely still solvable (not a perfect check)
             removedCount++;
         } else {
-            puzzle[row][col] = originalValue; // Restore if it seems to break the basic rules
+            puzzle[row][col] = originalValue; 
         }
         attempts++;
     }
@@ -109,7 +102,6 @@ function generatePuzzle(solvedBoard, difficulty = 0.5) {
 }
 
 function isValidSudoku(board) {
-    // Check rows
     for (let i = 0; i < 9; i++) {
         const row = new Set();
         for (let j = 0; j < 9; j++) {
@@ -121,7 +113,6 @@ function isValidSudoku(board) {
         }
     }
 
-    // Check columns
     for (let j = 0; j < 9; j++) {
         const col = new Set();
         for (let i = 0; i < 9; i++) {
@@ -133,7 +124,6 @@ function isValidSudoku(board) {
         }
     }
 
-    // Check 3x3 subgrids
     for (let i = 0; i < 9; i += 3) {
         for (let j = 0; j < 9; j += 3) {
             const subgrid = new Set();
@@ -191,7 +181,7 @@ function hideModal() {
 
 function startNewGame() {
     solution = solvedBoard.map(row => [...row]);
-    const puzzle = generatePuzzle(solution, 0.3); // difficulty (0.1 - easy, 0.9 - hard)
+    const puzzle = generatePuzzle(solution, 0.3); 
     board = puzzle.map(row => [...row]);
     createGrid(puzzle);
     hideModal();

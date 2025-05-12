@@ -6,7 +6,7 @@ body {
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
-    position: relative; /* Szükséges a header abszolút pozicionálásához */
+    position: relative; 
 }
 
 header {
@@ -16,7 +16,7 @@ header {
     text-align: center;
     margin-bottom: 30px;
     width: 100%;
-    position: relative; /* Hogy a benne lévő abszolút pozicionált elemhez viszonyítva helyezkedjen el */
+    position: relative; 
 }
 
 header h1 {
@@ -45,7 +45,7 @@ header p {
 }
 
 .about-link i {
-    vertical-align: middle; /* Igazítja az ikont a szöveghez (ha lenne) */
+    vertical-align: middle; 
 }
 
 .container {
@@ -200,7 +200,6 @@ header p {
     color: #333;
 }
 
-/* Reszponzív töréspontok */
 @media (max-width: 600px) {
     header h1 {
         font-size: 1.8em;
